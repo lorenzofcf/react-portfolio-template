@@ -1,41 +1,26 @@
-import React, { useEffect, useState } from "react";
-import CustomCursor from "custom-cursor-react";
-import "custom-cursor-react/dist/index.css";
-import { useTheme } from "next-themes";
+import React, { useEffect } from "react";
 
 const Cursor = () => {
-  const theme = useTheme();
-  const [mount, setMount] = useState();
-
-  const getCusomColor = () => {
-    if (theme.theme === "dark") {
-      return "#fff";
-    } else if (theme.theme === "light") {
-      return "#000";
-    }
-  };
-
   useEffect(() => {
-    setMount(true);
+    const handleMouseMove = (e) => {
+      const style = document.documentElement.style;
+      const isDark = document.documentElement.classList.contains("dark");
+      const cursorColor = isDark ? "#fff" : "#000";
+      style.setProperty('--cursor-x', e.clientX + 'px');
+      style.setProperty('--cursor-y', e.clientY + 'px');
+      style.setProperty('--cursor-color', cursorColor);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
+
   return (
-    <>
-      {mount && (
-        <CustomCursor
-          targets={[".link"]}
-          customClass="custom-cursor"
-          dimensions={30}
-          fill={getCusomColor()}
-          smoothness={{
-            movement: 0.2,
-            scale: 0.1,
-            opacity: 0.2,
-          }}
-          targetOpacity={0.5}
-          targetScale={2}
-        />
-      )}
-    </>
+    <style>{`
+      a.link, [class*="link"], button {
+        cursor: pointer;
+      }
+    `}</style>
   );
 };
 
