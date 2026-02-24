@@ -51,8 +51,7 @@ const Edit = () => {
   };
 
   const deleteProject = (id) => {
-    const copyProjects = data.projects;
-    copyProjects = copyProjects.filter((project) => project.id !== id);
+    const copyProjects = data.projects.filter((project) => project.id !== id);
     setData({ ...data, projects: copyProjects });
   };
 
@@ -80,8 +79,7 @@ const Edit = () => {
   };
 
   const deleteService = (id) => {
-    const copyServices = data.services;
-    copyServices = copyServices.filter((service) => service.id !== id);
+    const copyServices = data.services.filter((service) => service.id !== id);
     setData({ ...data, services: copyServices });
   };
 
@@ -108,8 +106,7 @@ const Edit = () => {
   };
 
   const deleteSocials = (id) => {
-    const copySocials = data.socials;
-    copySocials = copySocials.filter((social) => social.id !== id);
+    const copySocials = data.socials.filter((social) => social.id !== id);
     setData({ ...data, socials: copySocials });
   };
 
