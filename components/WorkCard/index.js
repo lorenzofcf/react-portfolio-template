@@ -114,7 +114,7 @@ const WorkCard = ({ img, name, description, onClick }) => {
             allowtransparency="true"
             allow="encrypted-media"
             onClick={(e) => e.stopPropagation()}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "70%", height: "100%" }}
           ></iframe>
         );
       }
@@ -128,7 +128,7 @@ const WorkCard = ({ img, name, description, onClick }) => {
           allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
           allowFullScreen
           onClick={(e) => e.stopPropagation()}
-          style={{ width: "100%", height: "100%" }}
+          style={{ width: "70%", height: "100%" }}
         ></iframe>
       );
     }
@@ -177,10 +177,10 @@ const WorkCard = ({ img, name, description, onClick }) => {
       </div>
       <div className="p-4 flex flex-col gap-1 mt-0">
         <h1 className="text-3xl font-medium">
-          {name ? name : "Project Name"}
+          {name ? name : ""}
         </h1>
         <h2 className="text-xl opacity-50">
-          {description ? description : "Description"}
+          {description ? description : ""}
         </h2>
       </div>
     </div>
