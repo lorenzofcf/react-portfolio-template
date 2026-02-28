@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-// Lightweight masonry: estimate item heights from aspect ratios and distribute
+// Helpers
 const isVideoFile = (url) => /\.(mp4|webm|mov)(\?.*)?$/i.test(url || "");
 const isYouTube = (url) => /(?:youtube.com|youtu.be)/i.test(url || "");
 const isFacebook = (url) => /facebook.com/i.test(url || "");
@@ -11,7 +11,7 @@ const getMediaType = (url) => {
   if (isVideoFile(url)) return "video-file";
   if (isYouTube(url)) return "youtube";
   if (isFacebook(url)) {
-    if (/\/videos\//i.test(url) || /facebook.com\/.+videos\//i.test(url)) return "facebook-video";
+    if (/\/videos\//i.test(url)) return "facebook-video";
     return "facebook-post";
   }
   if (isInstagram(url)) return "instagram";
@@ -34,24 +34,30 @@ export default function MasonryTwoColumns({ items = [], renderItem }) {
 
   useEffect(() => {
     function distribute() {
-      const containerWidth = containerRef.current ? containerRef.current.clientWidth : 800;
-      const gutter = 0; // no horizontal gap
-      const colWidth = (containerWidth - gutter) / 2;
+      if (!containerRef.current) return;
 
-      // estimate heights and distribute
+      const containerWidth = containerRef.current.clientWidth;
+      const colWidth = containerWidth / 2; // sem gap
+
       const colHeights = [0, 0];
       const columns = [[], []];
 
       items.forEach((item) => {
-        const mediaType = getMediaType(item.imageSrc || item.img || item.image || "");
+        const mediaType = getMediaType(
+          item.imageSrc || item.img || item.image || ""
+        );
+
         const padding = paddingMap[mediaType] || 56.25;
         const mediaHeight = (colWidth * padding) / 100;
-        const titleHeight = 56; // estimate title+desc block
-        const total = mediaHeight + titleHeight;
 
-        const target = colHeights[0] <= colHeights[1] ? 0 : 1;
-        columns[target].push(item);
-        colHeights[target] += total;
+        const titleBlockHeight = 56; // ajuste se necessário
+        const totalHeight = mediaHeight + titleBlockHeight;
+
+        const targetColumn =
+          colHeights[0] <= colHeights[1] ? 0 : 1;
+
+        columns[targetColumn].push(item);
+        colHeights[targetColumn] += totalHeight;
       });
 
       setCols(columns);
@@ -63,15 +69,27 @@ export default function MasonryTwoColumns({ items = [], renderItem }) {
   }, [items]);
 
   return (
-    <div ref={containerRef} className="w-full" style={{ display: "flex", gap: "16px", boxSizing: "border-box" }}>
-      <div style={{ width: "calc(50% - 8px)", boxSizing: "border-box" }}>
-        {cols[0].map((it) => (
-          <div key={it.id} style={{ marginBottom: "16px" }}>{renderItem(it)}</div>
+    <div
+      ref={containerRef}
+      style={{
+        display: "flex",
+        width: "100%",
+        gap: 0, // remove espaço entre colunas
+      }}
+    >
+      <div style={{ width: "50%" }}>
+        {cols[0].map((item) => (
+          <div key={item.id} style={{ marginBottom: 0 }}>
+            {renderItem(item)}
+          </div>
         ))}
       </div>
-      <div style={{ width: "calc(50% - 8px)", boxSizing: "border-box" }}>
-        {cols[1].map((it) => (
-          <div key={it.id} style={{ marginBottom: "16px" }}>{renderItem(it)}</div>
+
+      <div style={{ width: "50%" }}>
+        {cols[1].map((item) => (
+          <div key={item.id} style={{ marginBottom: 0 }}>
+            {renderItem(item)}
+          </div>
         ))}
       </div>
     </div>
